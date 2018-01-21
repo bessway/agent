@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="product-gateway" parallel="false" thread-count="2">
+    <parameter  name="otherName" value=" testNG!"/>
+    <test verbose="2" preserve-order="true" name="practice">  
+        <classes>
+            <class name="zll.practice.AppTest" />
+        </classes>
+    <!--
+        <packages>
+            <package name = "zll.practice" />
+        </packages>
+    -->
+    <!--
+        <class name="zll.practice.AppTest">
+            <methods>
+                <include name = "TestNgLearn" />
+            </methods>
+        </class>
+    -->
+    <!--
+        <groups>
+            <run>
+                <include name = "includedGroup" />
+                <exclude name = "excludedGroup" />
+            </run>
+        </groups>
+        <packages>
+            <package name = "zll.practice" />
+        </packages>
+    -->
+    </test>
+    <!--
+    <listeners>
+        <listener class-name="org.uncommons.reportng.HTMLReporter" />
+        <listener class-name="org.uncommons.reportng.JUnitXMLReporter" />
+    </listeners>
+    <usedefaultlisteners name="false" />
+    -->
+</suite> 
