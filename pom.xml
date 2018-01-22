@@ -33,6 +33,9 @@
           <suiteXmlFiles>
             <suiteXmlFile>testng.xml</suiteXmlFile>
           </suiteXmlFiles>
+        <systemPropertyVariables>
+          <otherName>${otherName}</otherName>
+        </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>

@@ -1,4 +1,5 @@
 target/classes/*
+!target/classes/.gitkeep
 target/test-classes/*
 target/maven-status
 target/surefire-reports
