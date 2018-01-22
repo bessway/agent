@@ -34,7 +34,7 @@
             <suiteXmlFile>testng.xml</suiteXmlFile>
           </suiteXmlFiles>
         <systemPropertyVariables>
-          <otherName>${otherName}</otherName>
+          <jenkinsparameter>${otherName}</jenkinsparameter>
         </systemPropertyVariables>
         </configuration>
       </plugin>
