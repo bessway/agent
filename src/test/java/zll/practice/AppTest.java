@@ -15,9 +15,9 @@ public class AppTest
         System.out.println("this is before class");
     }
 
-    @Parameters({"otherName"})
+    @Parameters({"jenkinsvalue"})
     @Test
-    //@Test(parameters = {"otherName"})
+    //@Test(parameters = {"jenkinsvalue"})
     public void TestNgLearn(String name) {
         System.out.println("this is TestNG test case "+name);
     }
