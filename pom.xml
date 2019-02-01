@@ -1,44 +1,157 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project 
+  xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>zll</groupId>
-  <artifactId>practice</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <groupId>com.auto.hike</groupId>
+  <artifactId>agent</artifactId>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
-
-  <name>practice</name>
+  <name>agent</name>
   <url>http://maven.apache.org</url>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <!--maven.compiler.source>1.8</maven.compiler.source><maven.compiler.target>1.8</maven.compiler.target-->
+    <!--mvn -Dname=value实际上是在设置系统变量name，可以直接在testng中通过System.getProperty("name")使用，
+    或者通过@Parameters({"name"})
+    在pom中可以通过${name}来引用
+    但是在这里定义的变量，在testng中不能直接用，即这里的fromcmd不能直接使用
+    但是fromcmd在pom中可以通过${fromcmd}使用-->
+    <!--fromcmd>${name}</fromcmd-->
   </properties>
-
-  <dependencies>
-    <dependency>
-        <groupId>org.testng</groupId>
-        <artifactId>testng</artifactId>
-        <version>5.12.1</version>
-        <scope>test</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.18.1</version>
+        <version>2.21.0</version>
         <configuration>
+          <!--这里设置的systemPropertyVariables在testng中可以直接使用
+        所以这里实际上是通过${fromcmd}引用${name}，从而引用到命令行中设置的参数
+        其实这里也可以直接用${name}替换${fromcmd}-->
+          <!--systemPropertyVariables><browserTypeinpom>${browserType}</browserTypeinpom></systemPropertyVariables-->
           <suiteXmlFiles>
             <suiteXmlFile>testng.xml</suiteXmlFile>
           </suiteXmlFiles>
-        <systemPropertyVariables>
-          <jenkinsparameter>${otherName}</jenkinsparameter>
-        </systemPropertyVariables>
+          <testSourceDirectory>${basedir}/src/main/java/</testSourceDirectory>
+          <testClassesDirectory>${project.build.directory}/classes/</testClassesDirectory>
+          <properties>
+            <property>
+              <name>usedefaultlisteners</name>
+              <value>false</value>
+            </property>
+            <!--property><name>listener</name><value>org.uncommons.reportng.HTMLReporter, org.uncommons.reportng.JUnitXMLReporter</value></property-->
+          </properties>
+          <argLine>-Dfile.encoding=UTF-8</argLine>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.eclipse.m2e</groupId>
+        <artifactId>lifecycle-mapping</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <lifecycleMappingMetadata>
+            <pluginExecutions>
+              <pluginExecution>
+                <pluginExecutionFilter>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-resources-plugin</artifactId>
+                  <versionRange>[1.2,)</versionRange>
+                  <goals>
+                    <goal>resources</goal>
+                    <goal>testResources</goal>
+                  </goals>
+                </pluginExecutionFilter>
+                <action>
+                  <ignore />
+                </action>
+              </pluginExecution>
+            </pluginExecutions>
+          </lifecycleMappingMetadata>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>aspectj-maven-plugin</artifactId>
+        <version>1.11</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>test-compile</goal>
+            </goals>
+            <configuration>
+              <source>1.8</source>
+              <target>1.8</target>
+              <complianceLevel>1.8</complianceLevel>
+              <encoding>UTF-8</encoding>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-    <defaultGoal>compile</defaultGoal>
   </build>
+  <dependencies>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>6.8</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-firefox-driver</artifactId>
+      <version>3.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-chrome-driver</artifactId>
+      <version>3.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-ie-driver</artifactId>
+      <version>3.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-edge-driver</artifactId>
+      <version>3.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-android-driver</artifactId>
+      <version>2.39.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-support</artifactId>
+      <version>3.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.17</version>
+    </dependency>
+    <!--dependency><groupId>org.uncommons</groupId><artifactId>reportng</artifactId><version>1.1.4</version><scope>test</scope><exclusions><exclusion><groupId>org.testng</groupId><artifactId>testng</artifactId></exclusion></exclusions></dependency-->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>3.1.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.8.13</version>
+    </dependency>
+  </dependencies>
 </project>

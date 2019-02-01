@@ -1,5 +1,5 @@
-target/classes/*
-!target/classes/.gitkeep
-target/test-classes/*
-target/maven-status
-target/surefire-reports
+target/
+log/
+.settings/
+.sts4-cache/
+report-output/*
