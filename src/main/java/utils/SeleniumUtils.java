@@ -501,11 +501,7 @@ public class SeleniumUtils {
     public static void main(String[] args) throws Exception{
         try{
 
-            openSiteKey("http://devesp.zkh360.com/user/login?username=ads&password=1234abcd", "chrome");
-            clickKey("//div[@class='index_tab_con']/a[@href='userCenter']");
-            clickKey("//a[@href='deliveryAddressEditable']");
-            clickKey("(//div[@class='contact_con custom_scrollbar'])[1]");
-            clickKey("(//div[@class='editable_btns']/a[@data-bind='click: $root.editContact'])[1]");
+            openSiteKey("http://127.0.0.1:8081/rehike", "chrome");
         }catch(Exception e){
             throw e;
         }finally{
