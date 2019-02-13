@@ -46,7 +46,7 @@ public class SeleniumUtils {
             getCurrWait().until(ExpectedConditions.attributeToBe(By.xpath(target),attribute, exValue));
         }
         
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String assertNotEqualKey(String target, String attribute, String exValue) throws Exception {
         Boolean result=false;
@@ -56,7 +56,7 @@ public class SeleniumUtils {
             getCurrWait().until(ExpectedConditions.not(ExpectedConditions.attributeToBe(By.xpath(target),attribute, exValue)));
         }
         
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String clickKey(String target) throws Exception {
         Integer sumwait=0;
@@ -81,13 +81,13 @@ public class SeleniumUtils {
         if(sumwait>maxWait*1000){
             throw new Exception("cannot find element in 30 seconds "+target);
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String clickNotVisibleKey(String target) throws Exception {
         WebElement we=findElement(target);
         Thread.sleep(500);
         we.click();
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String inputKey(String target, String content) throws Exception {
         Integer sumwait=0;
@@ -111,7 +111,7 @@ public class SeleniumUtils {
         if(sumwait>maxWait*1000){
             throw new Exception("cannot find element in 30 seconds "+target);
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String navigateToKey(String url) throws Exception{
         getCurrDriver().get(url);
@@ -122,7 +122,7 @@ public class SeleniumUtils {
         currDriver=url;
         return currDriver;
     }
-    public static String openSiteKey(String url, String browserType) throws Exception {
+    public static String openPageKey(String url, String browserType) throws Exception {
         WebDriver driver = null;
         if (!drivers.containsKey(url)) {
             driver = launchBrowser(browserType);
@@ -156,7 +156,7 @@ public class SeleniumUtils {
         if(sumwait>maxWait*1000){
             throw new Exception("cannot find element in 30 seconds "+target);
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String swithToFrameKey(String target) throws Exception{
         String handler=getCurrDriver().getWindowHandle();
@@ -169,7 +169,7 @@ public class SeleniumUtils {
         //it will check present display
         result=getCurrWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(xpath)));
         if(result!=null&&result.size()>0){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert visible failed");
         }
@@ -179,7 +179,7 @@ public class SeleniumUtils {
         //it will check present display
         result=getCurrWait().until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(xpath)));
         if(result){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert invisible failed");
         }
@@ -215,7 +215,7 @@ public class SeleniumUtils {
         } catch (NullPointerException e) {
             logger.debug("already quit driver "+ browserHandlerName);
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String assertMatchKey(String target, String attribute, String pattern) throws Exception {
         List<WebElement> elements=findElements(target);
@@ -251,11 +251,11 @@ public class SeleniumUtils {
                 throw new Exception("assert match failed: actual = "+actual+","+elements.size());
             }
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String hardWaitKey(String time) throws Exception {
         Thread.sleep(Integer.parseInt(time)*1000);
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String getAttributeKey(String target, String attribute, String pattern) throws Exception {
         WebElement ele=findElement(target);
@@ -329,18 +329,18 @@ public class SeleniumUtils {
     }
     public static String assertCountKey(String target,String exCount) throws Exception{
         getCurrWait().until(ExpectedConditions.numberOfElementsToBe(By.xpath(target), Integer.parseInt(exCount)));
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String waitEnableKey(String target) throws Exception{
         if(findElement(target).isEnabled()){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert enable failed");
         }
     }
     public static String waitDisableKey(String target) throws Exception{
         if(!findElement(target).isEnabled()){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert disable failed");
         }
@@ -351,7 +351,7 @@ public class SeleniumUtils {
     public static String assertTitleKey(String exValue) throws Exception{
         String actual=getCurrDriver().getTitle();
         if(exValue.equals(actual)){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert equal failed: actual = "+actual);
         }
@@ -362,14 +362,14 @@ public class SeleniumUtils {
         Pattern p=Pattern.compile(pattern);
         Matcher m=p.matcher(actual);
         if(m.find()){
-            return Utils.execPass;
+            return Utils.ExecStatus.SUCCESS.name();
         }else{
             throw new Exception("assert equal failed: actual = "+actual);
         }
     }
     public static String closeAlertKey() throws Exception{
         getCurrDriver().switchTo().alert().accept();
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     public static String closeAndSwithToTabKey() throws Exception{
         Set<String> handles = getCurrDriver().getWindowHandles();
@@ -383,7 +383,7 @@ public class SeleniumUtils {
                 break;
             }
         }
-        return Utils.execPass;
+        return Utils.ExecStatus.SUCCESS.name();
     }
     //TO-DO
     public static String postKey(String url, String header, String body) throws Exception {
@@ -501,7 +501,7 @@ public class SeleniumUtils {
     public static void main(String[] args) throws Exception{
         try{
 
-            openSiteKey("http://127.0.0.1:8081/rehike", "chrome");
+            openPageKey("http://127.0.0.1:8081/rehike", "chrome");
         }catch(Exception e){
             throw e;
         }finally{

@@ -31,7 +31,7 @@ public class StepAspect{
  
     @AfterReturning(pointcut="pointcutName()", returning="result")
     public void afterReturning(Object result) {
-        if(Utils.execFail.equals(String.valueOf(result))){
+        if(Utils.ExecStatus.FAILED==result){
             String screenshot=null;
             try{
                 screenshot=SeleniumUtils.takeScreenshot();

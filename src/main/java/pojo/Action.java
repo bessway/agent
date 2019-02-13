@@ -1,8 +1,8 @@
-package core.pojo;
+package pojo;
 
 import java.util.List;
 
-public class Action{
+public class Action implements Executable{
     private String actionId = null;
     private String actionName = null;
     private Integer hasUIObject = null;

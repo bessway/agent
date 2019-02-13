@@ -1,8 +1,8 @@
-package core.pojo;
+package pojo;
 
 import java.util.List;
 
-public class Test{
+public class Test implements Executable{
     private Long index = null;
     private String testId = null;
     private String testDesc = null;

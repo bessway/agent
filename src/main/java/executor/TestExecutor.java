@@ -1,49 +1,41 @@
 package executor;
 
-import core.pojo.CasePojo;
-import core.pojo.CaseDataPojo;
-import java.util.Map;
+import pojo.Para;
+import pojo.Step;
+import pojo.Test;
 
-import core.pojo.StepPojo;
 import utils.Utils;
-import core.pojo.StepDataPojo;
-import java.util.List;;
+import java.util.List;
+import pojo.Executable;
 
-public class TestExecutor implements Executor<StepPojo,StepDataPojo>{
-    private CasePojo test=null;
+public class TestExecutor implements Executor{
+    private Test test=null;
     private Executor successor=null;
-    private CaseDataPojo data=null;
-    private List<StepDataPojo> sortStep=null;
+    private List<Para> data=null;
 
     public TestExecutor(){
         
     }
-    public TestExecutor(CasePojo test,CaseDataPojo data){
-        this.test=test;
+    public TestExecutor(Executable test,List<Para> data){
+        this.test=(Test)test;
         this.data=data;
-        this.sortStep=data.getSortedStepsData();
     }
     
-    public String execute(Map<String,String> sPara,Map<String,String> gPara) throws Exception{
-        String caseResult = Utils.execPass;
-        for (StepPojo step : this.test.getSortedSteps()) {
-            String result = this.getSuccessor(step,this.getTestData(step)).execute(this.getSharedData(), gPara);
-            //有一个失败则整体是失败状态，停止当前case的执行
-            if (result.equals(Utils.execFail)) {
-                caseResult = result;
+    public String execute() throws Exception{
+        Utils.ExecStatus testResult = Utils.ExecStatus.SUCCESS;
+        for(int i=0;i<this.test.getSteps().size();i++){
+            Step step=this.test.getSteps().get(i);
+            String result = this.getSuccessor(step, this.data).execute();
+            //有一步失败则整体是失败状态，停止当前case的执行
+            if (result.equals(Utils.ExecStatus.FAILED.name())) {
+                testResult = Utils.ExecStatus.FAILED;
                 break;
             }
         }
-        return caseResult;
+        return testResult.name();
     }
-    public Executor getSuccessor(StepPojo test,StepDataPojo data){
+    public Executor getSuccessor(Executable test,List<Para> data){
         this.successor=new StepExecutor(test, data);
         return this.successor;
-    }
-    public Map<String,String> getSharedData(){
-        return this.data.getSharedParas();
-    }
-    public StepDataPojo getTestData(StepPojo test){
-        return this.sortStep.get(test.getIndex());
     }
 }

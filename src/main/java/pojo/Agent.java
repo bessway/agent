@@ -1,6 +1,6 @@
-package core.pojo;
+package pojo;
 
-public class AgentPojo{
+public class Agent{
     private String osType=null;
     private String osVersion=null;
     private String browserType=null;

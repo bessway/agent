@@ -6,8 +6,20 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Properties;
+import java.util.Hashtable;
+import java.util.Map;
+
+import pojo.Action;
 
 public class Utils{
+    //id=action
+    public static Hashtable<String, Action> cachedAction = null;
+    //id=name@@xpath
+    public static Map<String,String> cachedUiObj=null;
+    public static String uiObjSeperator="@@";
+    public static Map<String,String> cachedTestPara=null;
+    public static String dataVersion = null;
+    public static String logLevel = null;
     public enum ExecStatus{
         READYTOSTART,
         RUNNING,
@@ -17,11 +29,6 @@ public class Utils{
         FAILEDTOSTART,
         FORCESTOP,
     }
-    public final static String execPass="exec pass";
-    public final static String execFail="exec fail";
-    public final static String execException="exec stopped";
-    public final static String gParaSymbol="%%";
-    public final static String sParaSymbol="@@";
 
     public static Properties readPropery(String fileName) throws Exception{
         String path=Utils.class.getResource("/").toURI().getRawPath();

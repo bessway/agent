@@ -1,8 +1,10 @@
 package executor;
 
-import java.util.Map;
+import java.util.List;
+import pojo.Para;
+import pojo.Executable;
 
-public interface Executor<T,D>{
-    public String execute(Map<String,String> sPara,Map<String,String> gPara) throws Exception;
-    public Executor<T,D> getSuccessor(T test,D data);
+public interface Executor{
+    public String execute() throws Exception;
+    public Executor getSuccessor(Executable test,List<Para> data);
 }

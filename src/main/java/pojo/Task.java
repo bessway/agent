@@ -1,18 +1,17 @@
-package core.pojo;
+package pojo;
 
 import java.util.Date;
 import java.util.Map;
+
 import java.util.HashMap;
 
-import utils.Utils;
-
-public class Task{
+public class Task implements Executable{
     private String jenkinsJobName=null;
     private Integer jenkinsBuildId=null;
-    private Utils.ExecStatus taskStatus=null;
+    private String taskStatus=null;
     private Date startTime=null;
     private Date endTime=null;
-    private Map<String,Utils.ExecStatus> tests=null;
+    private Map<String,String> tests=null;
     private Integer forceStop=null;
     private Date createTime=null;
     private Integer passedCnt=null;
@@ -63,10 +62,10 @@ public class Task{
     public void setEndTime(Date endTime){
         this.endTime=endTime;
     }
-    public Map<String,Utils.ExecStatus> getTests(){
+    public Map<String,String> getTests(){
         return this.tests;
     }
-    public void setTests(Map<String,Utils.ExecStatus> tests){
+    public void setTests(Map<String,String> tests){
         this.tests=tests;
     }
     public String getJenkinsJobName(){
@@ -75,7 +74,7 @@ public class Task{
     public Integer getJenkinsBuildId(){
         return this.jenkinsBuildId;
     }
-    public Utils.ExecStatus getTaskStatus(){
+    public String getTaskStatus(){
         return this.taskStatus;
     }
     public void setJenkinsJobName(String jenkinsJobName){
@@ -84,12 +83,12 @@ public class Task{
     public void setJenkinsBuildId(Integer jenkinsBuildId){
         this.jenkinsBuildId=jenkinsBuildId;
     }
-    public void setTaskStatus(Utils.ExecStatus taskStatus){
+    public void setTaskStatus(String taskStatus){
         this.taskStatus=taskStatus;
     }
-    public void addTest(String key,Utils.ExecStatus value){
+    public void addTest(String key,String value){
         if(tests==null){
-            this.tests=new HashMap<String,Utils.ExecStatus>();
+            this.tests=new HashMap<String,String>();
         }
         this.tests.put(key,value);
     }

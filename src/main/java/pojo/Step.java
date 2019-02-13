@@ -1,8 +1,8 @@
-package core.pojo;
+package pojo;
 
 import java.util.List;
 
-public class Step{
+public class Step implements Executable{
     private Integer index = null;
     private String actionId = null;
     private String stepDesc = null;
@@ -10,7 +10,7 @@ public class Step{
     private String refTestId = null;
     private List<Long> paras = null;
     private Long resParaId = null;
-    /*0:ui, 1:api, 2:ref*/
+    //0:ui, 1:api, 2:ref
     private Integer stepType = null;
 
     public void setIndex(Integer index){

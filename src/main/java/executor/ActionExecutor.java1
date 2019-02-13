@@ -11,29 +11,27 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-import core.pojo.KeyPojo;
-import core.pojo.ParaPojo;
+import pojo.Action;
+import pojo.Executable;
+import pojo.Para;
 import utils.ReportUtils;
 import utils.SeleniumUtils;
 import utils.Utils;
 
 import java.lang.reflect.Method;
-import core.pojo.StepDataPojo;
 
-public class KeyExecutor implements Executor<KeyPojo,StepDataPojo>{
-    private static Logger logger=Logger.getLogger(KeyExecutor.class);
-    private KeyPojo test=null;
-    private List<ParaPojo> data=null;
+public class ActionExecutor implements Executor{
+    private static Logger logger=Logger.getLogger(ActionExecutor.class);
+    private Action test=null;
+    private List<Para> data=null;
     private String target=null;
     private String response=null;
     private static String keySuffix="Key";
-    public KeyExecutor(KeyPojo test,StepDataPojo data){
-        this.test=test;
-        this.data=data.getSortedStepParas();
-        this.target=data.getTarget();
-        this.response=data.getResponse();
+    public ActionExecutor(Executable test, List<Para> data){
+        this.test=(Action)test;
+        this.data=data;
     }
-    public String execute(Map<String,String> sPara,Map<String,String> gPara) throws Exception{
+    public String execute() throws Exception{
         String funcName=this.test.getRegFunc();
         funcName=funcName+keySuffix;
         int paraCount=this.data.size();
@@ -67,14 +65,13 @@ public class KeyExecutor implements Executor<KeyPojo,StepDataPojo>{
             }
         }catch(NoSuchMethodException e){
             logger.debug("cannot find the method "+funcName);
-            result=Utils.execFail;
+            throw new Exception("cannot find the method "+funcName);
         }catch(Exception e){
             logger.debug("excute method "+funcName+" failed");
-            result=Utils.execFail;
+            throw new Exception("excute method "+funcName+" failed");
         }
         
-
-        return String.valueOf(result);
+        return Utils.ExecStatus.SUCCESS;
     }
     public Executor getSuccessor(KeyPojo test,StepDataPojo data){
         return null;
@@ -117,7 +114,7 @@ public class KeyExecutor implements Executor<KeyPojo,StepDataPojo>{
         return result;
     }
     private String getXpath(String pathName,Map<String,String> sPara,Map<String,String> gPara) throws Exception{
-        String result=UITask.cachedObj.get(pathName);
+        String result=Utils.cachedUiObj.get(pathName);
         if(result==null){
             throw new Exception("cannot find the xpath: "+pathName);
         }

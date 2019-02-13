@@ -20,11 +20,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
-import core.pojo.AgentPojo;
-import core.pojo.Task;
-import core.pojo.Para;
-import core.pojo.Test;
-import core.pojo.Action;
+import pojo.Agent;
+import pojo.Task;
+import pojo.Para;
+import pojo.Test;
+import pojo.Uiobject;
+import pojo.Action;
 
 public class ServerUtils {
     private static String agentConfigFile = "agent.properties";
@@ -71,40 +72,6 @@ public class ServerUtils {
         res.close();
         return result;
     }
-    public static void updateExecStatus(Task suite)throws Exception{
-        String method="/api/v2/jenkins/jobstatus";
-        HttpPut put=new HttpPut();
-        put.setEntity(new StringEntity(gson.toJson(suite),"utf-8"));
-        callMethod(method, put).close();;
-    }
-    public static void updateCaseStatus(String jobName, Integer buildId, String caseId, Utils.ExecStatus status)throws Exception{
-        String method="/api/v2/jenkins/casestatus";
-        HttpPut put=new HttpPut();
-        Task req=new Task();
-        req.setJenkinsJobName(jobName);
-        req.setJenkinsBuildId(buildId);
-        req.addTest(caseId, status);
-        put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
-        callMethod(method, put).close();;
-    }
-    public static void updateAgentStatus(String jobName, Boolean isFree)throws Exception{
-        String method="/api/v2/jenkins/agentstatus";
-        HttpPut put=new HttpPut();
-        AgentPojo req=new AgentPojo();
-        req.setJobName(jobName);
-        req.setStatus(isFree);
-        put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
-        callMethod(method, put).close();;
-    }
-    public static List<Para> getTestParas(String testId,String version)throws Exception{
-        String method="/api/v2/paras/test/"+testId+"/version/"+version;
-        HttpGet get=new HttpGet();
-        CloseableHttpResponse res=callMethod(method, get);
-        List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
-        }.getType());
-        res.close();
-        return result;
-    }
     public static List<Test> getTests(List<String> testIds)throws Exception{
         String method="/api/v2/tests";
         HttpPost post=new HttpPost();
@@ -115,6 +82,40 @@ public class ServerUtils {
         res.close();
         return result;
     }
+    public static List<Para> getTestParas(String testId,String version)throws Exception{
+        String method="/api/v2/paras/test/"+testId+"/version/"+version;
+        HttpGet get=new HttpGet();
+        CloseableHttpResponse res=callMethod(method, get);
+        List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
+        }.getType());
+        res.close();
+        return result;
+    }
+    public static void updateExecStatus(Task suite)throws Exception{
+        String method="/api/v2/jenkins/jobstatus";
+        HttpPut put=new HttpPut();
+        put.setEntity(new StringEntity(gson.toJson(suite),"utf-8"));
+        callMethod(method, put).close();;
+    }
+    public static void updateTestStatus(String jobName, Integer buildId, String testId, String status)throws Exception{
+        String method="/api/v2/jenkins/teststatus";
+        HttpPut put=new HttpPut();
+        Task req=new Task();
+        req.setJenkinsJobName(jobName);
+        req.setJenkinsBuildId(buildId);
+        req.addTest(testId, status);
+        put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
+        callMethod(method, put).close();;
+    }
+    public static void updateAgentStatus(String jobName, Boolean isFree)throws Exception{
+        String method="/api/v2/jenkins/agentstatus";
+        HttpPut put=new HttpPut();
+        Agent req=new Agent();
+        req.setJobName(jobName);
+        req.setStatus(isFree);
+        put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
+        callMethod(method, put).close();;
+    }
     public static List<Action> getAllActions()throws Exception{
         String method="/api/v2/actions/all";
         HttpGet get=new HttpGet();
@@ -124,11 +125,36 @@ public class ServerUtils {
         res.close();
         return result;
     }
-    public static Map<String,String> getUiObjectsByPage(String page)throws Exception{
-        String method="/api/v2/objects/structedpage/"+page;
+    public static List<Uiobject> getUiObjectsByPage(String page)throws Exception{
+        String method="/api/v2/objects/page/"+page;
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
-        Map<String,String> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<Map<String,String>>() {
+        List<Uiobject> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<List<Uiobject>>() {
+        }.getType());
+        res.close();
+        return result;
+    }
+    public static Uiobject getUiObjectById(String objId)throws Exception{
+        String method="/api/v2/objects/uiobject/"+objId;
+        HttpGet get=new HttpGet();
+        CloseableHttpResponse res=callMethod(method, get);
+        Uiobject result=gson.fromJson(EntityUtils.toString(res.getEntity()), Uiobject.class);
+        res.close();
+        return result;
+    }
+    public static Test getRefTestDetail(String refTestId)throws Exception{
+        String method="/api/v2/tests/testdetail/"+refTestId;
+        HttpGet get=new HttpGet();
+        CloseableHttpResponse res=callMethod(method, get);
+        Test result=gson.fromJson(EntityUtils.toString(res.getEntity()), Test.class);
+        res.close();
+        return result;
+    }
+    public static List<Para> getRefTestParas(String refTestId, Integer stepId, String dataVersion)throws Exception{
+        String method="/api/v2/paras/test/"+refTestId+"/step/"+String.valueOf(stepId)+"+/versioin/"+dataVersion;
+        HttpGet get=new HttpGet();
+        CloseableHttpResponse res=callMethod(method, get);
+        List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
         }.getType());
         res.close();
         return result;

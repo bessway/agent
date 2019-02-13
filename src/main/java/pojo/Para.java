@@ -1,4 +1,4 @@
-package core.pojo;
+package pojo;
 
 public class Para{
     private String testId = null;

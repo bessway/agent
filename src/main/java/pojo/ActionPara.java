@@ -1,4 +1,4 @@
-package core.pojo;
+package pojo;
 
 public class ActionPara{
     private String paraDesc = null;
