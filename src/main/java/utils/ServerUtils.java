@@ -21,10 +21,10 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 
 import core.pojo.AgentPojo;
-import core.pojo.BuildPojo;
-import core.pojo.CaseDataPojo;
-import core.pojo.CasePojo;
-import core.pojo.KeyPojo;
+import core.pojo.Task;
+import core.pojo.Para;
+import core.pojo.Test;
+import core.pojo.Action;
 
 public class ServerUtils {
     private static String agentConfigFile = "agent.properties";
@@ -63,32 +63,32 @@ public class ServerUtils {
         return res;
     }
 
-    public static BuildPojo getExecution(String jobName,Integer buildId) throws Exception{
-        String method="/1/jenkins/job/"+jobName+"/build/"+String.valueOf(buildId);
+    public static Task getTask(String jobName,Integer buildId) throws Exception{
+        String method="/api/v2/jenkins/job/"+jobName+"/build/"+String.valueOf(buildId);
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
-        BuildPojo result=gson.fromJson(EntityUtils.toString(res.getEntity()), BuildPojo.class);
+        Task result=gson.fromJson(EntityUtils.toString(res.getEntity()), Task.class);
         res.close();
         return result;
     }
-    public static void updateExecStatus(BuildPojo suite)throws Exception{
-        String method="/1/jenkins/jobstatus";
+    public static void updateExecStatus(Task suite)throws Exception{
+        String method="/api/v2/jenkins/jobstatus";
         HttpPut put=new HttpPut();
         put.setEntity(new StringEntity(gson.toJson(suite),"utf-8"));
         callMethod(method, put).close();;
     }
     public static void updateCaseStatus(String jobName, Integer buildId, String caseId, Utils.ExecStatus status)throws Exception{
-        String method="/1/jenkins/casestatus";
+        String method="/api/v2/jenkins/casestatus";
         HttpPut put=new HttpPut();
-        BuildPojo req=new BuildPojo();
-        req.setJobName(jobName);
-        req.setBuildId(buildId);
-        req.addCase(caseId, status);
+        Task req=new Task();
+        req.setJenkinsJobName(jobName);
+        req.setJenkinsBuildId(buildId);
+        req.addTest(caseId, status);
         put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
         callMethod(method, put).close();;
     }
     public static void updateAgentStatus(String jobName, Boolean isFree)throws Exception{
-        String method="/1/jenkins/agentstatus";
+        String method="/api/v2/jenkins/agentstatus";
         HttpPut put=new HttpPut();
         AgentPojo req=new AgentPojo();
         req.setJobName(jobName);
@@ -96,46 +96,36 @@ public class ServerUtils {
         put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
         callMethod(method, put).close();;
     }
-    public static List<String> getGlobalParas() throws Exception{
-        String method="/1/data/global";
+    public static List<Para> getTestParas(String testId,String version)throws Exception{
+        String method="/api/v2/paras/test/"+testId+"/version/"+version;
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
-        List<String> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<List<String>>() {
+        List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
         }.getType());
         res.close();
         return result;
     }
-    public static List<CaseDataPojo> getCasesData(List<String> casesId,String version)throws Exception{
-        String method="/1/data/casesdata/version/"+version;
+    public static List<Test> getTests(List<String> testIds)throws Exception{
+        String method="/api/v2/tests";
         HttpPost post=new HttpPost();
-        post.setEntity(new StringEntity(gson.toJson(casesId),"utf-8"));
+        post.setEntity(new StringEntity(gson.toJson(testIds),"utf-8"));
         CloseableHttpResponse res=callMethod(method, post);
-        List<CaseDataPojo> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<CaseDataPojo>>() {
+        List<Test> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Test>>() {
         }.getType());
         res.close();
         return result;
     }
-    public static List<CasePojo> getCases(List<String> casesId)throws Exception{
-        String method="/1/test/cases";
-        HttpPost post=new HttpPost();
-        post.setEntity(new StringEntity(gson.toJson(casesId),"utf-8"));
-        CloseableHttpResponse res=callMethod(method, post);
-        List<CasePojo> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<CasePojo>>() {
-        }.getType());
-        res.close();
-        return result;
-    }
-    public static List<KeyPojo> getAllKeys()throws Exception{
-        String method="/1/action/all";
+    public static List<Action> getAllActions()throws Exception{
+        String method="/api/v2/actions/all";
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
-        List<KeyPojo> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<List<KeyPojo>>() {
+        List<Action> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<List<Action>>() {
         }.getType());
         res.close();
         return result;
     }
-    public static Map<String,String> getAllObjects()throws Exception{
-        String method="/1/object/all";
+    public static Map<String,String> getUiObjectsByPage(String page)throws Exception{
+        String method="/api/v2/objects/structedpage/"+page;
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
         Map<String,String> result=gson.fromJson(EntityUtils.toString(res.getEntity()), new TypeToken<Map<String,String>>() {

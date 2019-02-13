@@ -9,16 +9,16 @@ import utils.Utils;
 import core.pojo.StepDataPojo;
 import java.util.List;;
 
-public class CaseExecutor implements Executor<StepPojo,StepDataPojo>{
+public class TestExecutor implements Executor<StepPojo,StepDataPojo>{
     private CasePojo test=null;
     private Executor successor=null;
     private CaseDataPojo data=null;
     private List<StepDataPojo> sortStep=null;
 
-    public CaseExecutor(){
+    public TestExecutor(){
         
     }
-    public CaseExecutor(CasePojo test,CaseDataPojo data){
+    public TestExecutor(CasePojo test,CaseDataPojo data){
         this.test=test;
         this.data=data;
         this.sortStep=data.getSortedStepsData();
