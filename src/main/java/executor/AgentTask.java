@@ -5,6 +5,7 @@ import org.testng.collections.Lists;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.testng.annotations.BeforeClass;
@@ -63,8 +64,7 @@ public class AgentTask implements Executor {
             ReportUtils.addStartTime(new Date());
             String result = Utils.ExecStatus.SUCCESS.name();
             try {
-                List<Para> paras = ServerUtils.getTestParas(casz.getTestId(), Utils.dataVersion);
-                result = this.getSuccessor(casz, paras).execute();
+                result = this.getSuccessor(casz, this.getTestParas(casz.getTestId())).execute();
             } catch (Exception e) {
                 result = Utils.ExecStatus.FAILED.name();
             }finally{
@@ -95,7 +95,7 @@ public class AgentTask implements Executor {
     }
 
     @Override
-    public Executor getSuccessor(Executable test, List<Para> data) {
+    public Executor getSuccessor(Executable test, Map<String, Para> data) {
         this.successor = new TestExecutor(test, data);
         return this.successor;
     }
@@ -114,5 +114,18 @@ public class AgentTask implements Executor {
             Utils.cachedAction.put(item.getActionId(), item);
         }
         logger.debug(Utils.cachedAction.get("click").toString());
+    }
+    private Map<String, Para> getTestParas(String testId) throws Exception{
+        List<Para> paras = ServerUtils.getTestParas(testId, Utils.dataVersion);
+        Map<String, Para> result=new Hashtable<String, Para>();
+        for(Para item:paras){
+            //如果是refPara，跟步骤有关系
+            if(item.getRefTestId()!=null){
+                result.put(String.valueOf(item.getParaId())+"@"+String.valueOf(item.getStepId()), item);
+            }else{
+                result.put(String.valueOf(item.getParaId()), item);
+            }
+        }
+        return result;
     }
 }

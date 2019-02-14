@@ -5,18 +5,19 @@ import pojo.Step;
 import pojo.Test;
 
 import utils.Utils;
-import java.util.List;
+import java.util.Map;
 import pojo.Executable;
 
 public class TestExecutor implements Executor{
     private Test test=null;
     private Executor successor=null;
-    private List<Para> data=null;
+    //paraId@stepId=para
+    private Map<String, Para> data=null;
 
     public TestExecutor(){
         
     }
-    public TestExecutor(Executable test,List<Para> data){
+    public TestExecutor(Executable test,Map<String, Para> data){
         this.test=(Test)test;
         this.data=data;
     }
@@ -34,7 +35,7 @@ public class TestExecutor implements Executor{
         }
         return testResult.name();
     }
-    public Executor getSuccessor(Executable test,List<Para> data){
+    public Executor getSuccessor(Executable test,Map<String, Para> data){
         this.successor=new StepExecutor(test, data);
         return this.successor;
     }

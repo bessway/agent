@@ -25,11 +25,11 @@ import utils.Utils;
 public class StepExecutor implements Executor{
     private Step step=null;
     private Executor successor=null;
-    private List<Para> data=null;
+    private Map<String, Para> data=null;
     private static String keySuffix="Key";
     private static Logger logger=Logger.getLogger(StepExecutor.class);
 
-    public StepExecutor(Executable step,List<Para> data){
+    public StepExecutor(Executable step,Map<String, Para> data){
         this.step=(Step)step;
         this.data=data;
     }

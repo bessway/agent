@@ -2,7 +2,6 @@ package utils;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import com.google.common.reflect.TypeToken;
@@ -83,7 +82,7 @@ public class ServerUtils {
         return result;
     }
     public static List<Para> getTestParas(String testId,String version)throws Exception{
-        String method="/api/v2/paras/test/"+testId+"/version/"+version;
+        String method="/api/v2/paras/test/"+testId+"/version/"+version+"/all";
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);
         List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
@@ -150,13 +149,13 @@ public class ServerUtils {
         res.close();
         return result;
     }
-    public static List<Para> getRefTestParas(String refTestId, Integer stepId, String dataVersion)throws Exception{
-        String method="/api/v2/paras/test/"+refTestId+"/step/"+String.valueOf(stepId)+"+/versioin/"+dataVersion;
-        HttpGet get=new HttpGet();
-        CloseableHttpResponse res=callMethod(method, get);
-        List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
-        }.getType());
-        res.close();
-        return result;
-    }
+    // public static List<Para> getRefTestParas(String refTestId, Integer stepId, String dataVersion)throws Exception{
+    //     String method="/api/v2/paras/test/"+refTestId+"/step/"+String.valueOf(stepId)+"+/version/"+dataVersion;
+    //     HttpGet get=new HttpGet();
+    //     CloseableHttpResponse res=callMethod(method, get);
+    //     List<Para> result=gson.fromJson(EntityUtils.toString(res.getEntity()),new TypeToken<List<Para>>() {
+    //     }.getType());
+    //     res.close();
+    //     return result;
+    // }
 }
