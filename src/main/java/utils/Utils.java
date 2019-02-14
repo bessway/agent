@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLDecoder;
 import java.util.Properties;
+import java.util.Random;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class Utils{
     //id=name@@xpath
     public static Map<String,String> cachedUiObj=null;
     public static String uiObjSeperator="@@";
-    public static Map<String,String> cachedTestPara=null;
+    public static String paraSeperator="@";
     public static String dataVersion = null;
     public static String logLevel = null;
     public enum ExecStatus{
@@ -37,5 +38,21 @@ public class Utils{
         Properties result= new Properties();
         result.load(io);
         return result;
+    }
+    public static String getRandomString(int length){
+        //定义一个字符串（A-Z，a-z，0-9）即62位；
+        String str="zxcvbnmlkjhgfdsaqwertyuiopQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
+        //由Random生成随机数
+        Random random=new Random();  
+        StringBuffer sb=new StringBuffer();
+        //长度为几就循环几次
+        for(int i=0; i<length; ++i){
+            //产生0-61的数字
+            int number=random.nextInt(62);
+            //将产生的数字通过length次承载到sb中
+            sb.append(str.charAt(number));
+        }
+        //将承载的字符转换成字符串
+        return sb.toString();
     }
 }

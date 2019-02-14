@@ -81,7 +81,7 @@ public class ServerUtils {
         res.close();
         return result;
     }
-    public static List<Para> getTestParas(String testId,String version)throws Exception{
+    public static List<Para> getTestParasAll(String testId,String version)throws Exception{
         String method="/api/v2/paras/test/"+testId+"/version/"+version+"/all";
         HttpGet get=new HttpGet();
         CloseableHttpResponse res=callMethod(method, get);

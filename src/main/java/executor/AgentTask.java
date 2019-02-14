@@ -25,7 +25,6 @@ import utils.Utils;
 public class AgentTask implements Executor {
     private static Logger logger = Logger.getLogger(AgentTask.class);
     private Task suite = null;
-    private Executor successor = null;
     private List<Test> tests = null;
 
     @BeforeClass
@@ -64,7 +63,7 @@ public class AgentTask implements Executor {
             ReportUtils.addStartTime(new Date());
             String result = Utils.ExecStatus.SUCCESS.name();
             try {
-                result = this.getSuccessor(casz, this.getTestParas(casz.getTestId())).execute();
+                result = this.getSuccessor(casz, this.getTestParasAll(casz.getTestId())).execute();
             } catch (Exception e) {
                 result = Utils.ExecStatus.FAILED.name();
             }finally{
@@ -96,8 +95,7 @@ public class AgentTask implements Executor {
 
     @Override
     public Executor getSuccessor(Executable test, Map<String, Para> data) {
-        this.successor = new TestExecutor(test, data);
-        return this.successor;
+        return new TestExecutor(test, data);
     }
     // ================================================================================================================//
     // 检查是否手工停止执行
@@ -115,13 +113,13 @@ public class AgentTask implements Executor {
         }
         logger.debug(Utils.cachedAction.get("click").toString());
     }
-    private Map<String, Para> getTestParas(String testId) throws Exception{
-        List<Para> paras = ServerUtils.getTestParas(testId, Utils.dataVersion);
+    private Map<String, Para> getTestParasAll(String testId) throws Exception{
+        List<Para> paras = ServerUtils.getTestParasAll(testId, Utils.dataVersion);
         Map<String, Para> result=new Hashtable<String, Para>();
         for(Para item:paras){
             //如果是refPara，跟步骤有关系
             if(item.getRefTestId()!=null){
-                result.put(String.valueOf(item.getParaId())+"@"+String.valueOf(item.getStepId()), item);
+                result.put(String.valueOf(item.getParaId())+Utils.paraSeperator+String.valueOf(item.getStepId()), item);
             }else{
                 result.put(String.valueOf(item.getParaId()), item);
             }

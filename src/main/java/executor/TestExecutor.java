@@ -10,7 +10,6 @@ import pojo.Executable;
 
 public class TestExecutor implements Executor{
     private Test test=null;
-    private Executor successor=null;
     //paraId@stepId=para
     private Map<String, Para> data=null;
 
@@ -36,7 +35,15 @@ public class TestExecutor implements Executor{
         return testResult.name();
     }
     public Executor getSuccessor(Executable test,Map<String, Para> data){
-        this.successor=new StepExecutor(test, data);
-        return this.successor;
+        Step step=(Step)test;
+        Executor result=null;
+        //0:ui, 1:api, 2:ref, ref step 没有action
+        if(step.getStepType().equals(0)){
+            result=new UIStepExecutor(step, data);
+        }else if(step.getStepType().equals(1)){
+        }else{
+            result=new RefStepExecutor(step, data);
+        }
+        return result;
     }
 }
