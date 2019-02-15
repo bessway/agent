@@ -474,15 +474,4 @@ public class SeleniumUtils {
         driver.manage().timeouts().pageLoadTimeout(maxWait*6, TimeUnit.SECONDS);
         return driver;
     }
- 
-    public static void main(String[] args) throws Exception{
-        try{
-            openPageKey("http://127.0.0.1:8081/rehike", "chrome");
-        }catch(Exception e){
-            throw e;
-        }finally{
-            closeBrowsersKey(null);
-        }
-    }
-
 }

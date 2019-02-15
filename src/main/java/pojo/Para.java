@@ -9,6 +9,8 @@ public class Para{
     private Integer isFormalPara = null;
     private Integer stepId = null;
 
+    public Para(){}
+
     public void setTestId(String testId){
         this.testId=testId;
     }
