@@ -6,6 +6,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Utils",
+            "request": "launch",
+            "mainClass": "utils.Utils",
+            "projectName": "agent"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - SeleniumUtils",
+            "request": "launch",
+            "mainClass": "utils.SeleniumUtils",
+            "projectName": "agent"
+        },
+        {
+            "type": "java",
             "name": "Debug - Current File",
             "request": "launch",
             "mainClass": "executor.ParaHelper"

@@ -126,4 +126,9 @@ public class AgentTask implements Executor {
         }
         return result;
     }
+    public static void main(String[] args) throws Exception{
+        AgentTask test=new AgentTask();
+        test.loadData("zll",1,"default","","");
+        test.start();
+    }
 }

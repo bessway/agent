@@ -23,7 +23,6 @@ public class RefStepExecutor extends StepExecutor{
     @Override
     public String execute() throws Exception{
         ReportUtils.addLog(Status.INFO,"Step index: "+String.valueOf(this.step.getIndex()), null);
-        action=Utils.cachedAction.get(this.step.getActionId());
 
         Test reftest=ServerUtils.getRefTestDetail(this.step.getRefTestId());
         Map<String, Para> refTestParas=this.getTestParasAll(reftest.getTestId());

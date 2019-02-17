@@ -32,43 +32,47 @@ public class UIStepExecutor extends StepExecutor{
         this.getXpath();
         this.getParas();
 
-        String funcName=action.getRegFunc();
-            funcName=funcName+keySuffix;
-            Integer paraCount=this.step.getParas().size();
-            if(action.getHasUIObject().equals(1)){
-                paraCount=paraCount+1;
-            }
-            Class<String>[] mPara=new Class[paraCount];
-            for(int i=0;i<mPara.length;i++){
-                mPara[i]=String.class;
-            }
-            Object result=null;
-            try{
-                Method toExe=SeleniumUtils.class.getMethod(funcName, mPara);
-                List<String> mParaValue=new ArrayList<String>();
-                //如果有xpath，必须是第一个参数
-                if(action.getHasUIObject().equals(1)){
-                    mParaValue.add(0,uitarget);
-                }
-                mParaValue.addAll(paraValues);
-
-                ReportUtils.addLog(Status.INFO, funcName+this.paraToString(mParaValue)+" "+uitarget.split(Utils.uiObjSeperator)[0], null);
-            
-                result=toExe.invoke(null, mParaValue.toArray());
-                //设置返回值,返回值参数仅仅用于保存执行的值
-                if(action.getHasResponse().equals(1)){
-                    String paraId=String.valueOf(this.step.getResParaId());
-                    this.data.get(paraId).setParaValue(String.valueOf(result));
-                }
-            }catch(NoSuchMethodException e){
-                logger.debug("cannot find the method "+funcName);
-                return Utils.ExecStatus.FAILED.name();
-            }catch(Exception e){
-                logger.debug("excute method "+funcName+" failed");
-                return Utils.ExecStatus.FAILED.name();
-            }
+        String funcName = action.getRegFunc();
+        funcName = funcName + keySuffix;
+        List<String> mParaValue=new ArrayList<String>();
+        //如果有xpath，必须是第一个参数
+        if(action.getHasUIObject().equals(1)){
+            mParaValue.add(0,uitarget);
+        }
+        mParaValue.addAll(this.paraValues);
+        String result= "";
+        //result = this.executeKey(funcName, mParaValue);
+        System.out.println(funcName);
+        for(int i=0;i<mParaValue.size();i++){
+            System.out.println(mParaValue.get(i));
+        }
+        return result;
+    }
+    private String executeKey(String funcName, List<String> mParaValue){
+        Integer paraCount=mParaValue.size();
+        Class<String>[] mPara=new Class[paraCount];
+        for(int i=0;i<paraCount;i++){
+            mPara[i]=String.class;
+        }
+        try{
+            Method toExe=SeleniumUtils.class.getMethod(funcName, mPara);
+            ReportUtils.addLog(Status.INFO, funcName+this.paraToString(mParaValue)+" "+uitarget.split(Utils.uiObjSeperator)[0], null);
         
-            return Utils.ExecStatus.SUCCESS.name();
+            Object result=toExe.invoke(null, mParaValue.toArray());
+            //设置返回值,返回值参数仅仅用于保存执行的值
+            if(action.getHasResponse().equals(1)){
+                String paraId=String.valueOf(this.step.getResParaId());
+                this.data.get(paraId).setParaValue(String.valueOf(result));
+            }
+        }catch(NoSuchMethodException e){
+            logger.debug("cannot find the method "+funcName);
+            return Utils.ExecStatus.FAILED.name();
+        }catch(Exception e){
+            logger.debug("excute method "+funcName+" failed");
+            return Utils.ExecStatus.FAILED.name();
+        }
+    
+        return Utils.ExecStatus.SUCCESS.name();
     }
     private void getXpath() throws Exception{
         if(action.getHasUIObject().equals(1)){

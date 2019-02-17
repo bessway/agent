@@ -16,7 +16,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Date;
@@ -29,7 +28,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 
 public class SeleniumUtils {
     private static Logger logger = Logger.getLogger(SeleniumUtils.class);
@@ -337,7 +338,6 @@ public class SeleniumUtils {
         }else{
             throw new Exception("assert equal failed: actual = "+actual);
         }
-        
     }
     public static String assertTitleMatchKey(String pattern) throws Exception{
         String actual=getCurrDriver().getTitle();
@@ -367,6 +367,7 @@ public class SeleniumUtils {
         }
         return Utils.ExecStatus.SUCCESS.name();
     }
+
     private static WebElement findElement(String xpath) throws Exception{
         List<WebElement> result=findElements(xpath);
         if(result.size()>1){
@@ -384,7 +385,6 @@ public class SeleniumUtils {
         }
         return result;
     }
-    
     private static WebDriver getCurrDriver() throws Exception{
         if(drivers.size()==0 || drivers.get(currDriver)==null){
             throw new Exception("cannot find the driver: "+currDriver);
@@ -397,7 +397,6 @@ public class SeleniumUtils {
         }
         return waits.get(currDriver);
     }
-
     public static String takeScreenshot() throws Exception{
         deleteScreenshot();
         File screenshotDir = new File(ReportUtils.reportRoot);
@@ -427,17 +426,6 @@ public class SeleniumUtils {
                 fl.delete();
             }
         }
-    }
-    private static void takeElementScreenshot(String target) throws Exception{
-        File screenshotDir = new File("verifycode/");
-        if(!screenshotDir.exists()&& !screenshotDir.isDirectory()){
-            screenshotDir.mkdir();
-        }
-        String name=String.valueOf(new Date().getTime())+".jpg";
-        File path=new File("verifycode/"+name);
-        File img=((TakesScreenshot)getCurrDriver()).getScreenshotAs(OutputType.FILE);
-        BufferedImage screenImg=ImageIO.read(img);
-        WebElement ele= findElement(target);
     }
     private static WebDriver launchBrowser(String type) throws Exception {
         WebDriver driver = null;
@@ -473,5 +461,32 @@ public class SeleniumUtils {
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(maxWait*6, TimeUnit.SECONDS);
         return driver;
+    }
+    private static File getEleScreenshot(String target) throws Exception{
+        WebElement ele= findElement(target);
+        File img=ele.getScreenshotAs(OutputType.FILE);
+        return img;
+    }
+    // private static String identifyImg(File img) throws Exception{
+    //     ITesseract ocr=new Tesseract();
+    //     ocr.setDatapath(Utils.getResourcePath()+"eng.traineddata");
+    //     String result = ocr.doOCR(img);
+    //     return result;
+    // }
+    public static String gwFrontCodeKey(String target) throws Exception{
+        File img=getEleScreenshot(target);
+        String[] result= Utils.ocr(img, true);
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("js");
+        Object str=engine.eval(result[0] + result[1] + result[2]);
+        return (String)str;
+    }
+    public static String gwAdminCodeKey(String target) throws Exception{
+        File img=getEleScreenshot(target);
+        String[] result= Utils.ocr(img, false);
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("js");
+        Object str=engine.eval(result[0] + result[1] + result[2]);
+        return (String)str;
     }
 }
