@@ -68,7 +68,6 @@ public class ServerUtils {
         }else{
             return "";
         }
-        
     }
 
     public static Task getTask(String jobName,Integer buildId) throws Exception{
@@ -102,7 +101,7 @@ public class ServerUtils {
         return result;
     }
     public static void updateExecStatus(Task suite)throws Exception{
-        String method="/api/v2/jenkins/jobstatus";
+        String method="/api/v2/jenkins/taskstatus";
         HttpPut put=new HttpPut();
         put.setEntity(new StringEntity(gson.toJson(suite),"utf-8"));
         //callMethod(method, put).close();
@@ -119,16 +118,16 @@ public class ServerUtils {
         //callMethod(method, put).close();
         callMethod(method, put);
     }
-    public static void updateAgentStatus(String jobName, Boolean isFree)throws Exception{
-        String method="/api/v2/jenkins/agentstatus";
-        HttpPut put=new HttpPut();
-        Agent req=new Agent();
-        req.setJobName(jobName);
-        req.setStatus(isFree);
-        put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
-        //callMethod(method, put).close();
-        callMethod(method, put);
-    }
+    // public static void updateAgentStatus(String jobName, Boolean isFree)throws Exception{
+    //     String method="/api/v2/jenkins/agentstatus";
+    //     HttpPut put=new HttpPut();
+    //     Agent req=new Agent();
+    //     req.setJobName(jobName);
+    //     req.setStatus(isFree);
+    //     put.setEntity(new StringEntity(gson.toJson(req),"utf-8"));
+    //     //callMethod(method, put).close();
+    //     callMethod(method, put);
+    // }
     public static List<Action> getAllActions()throws Exception{
         String method="/api/v2/actions/all";
         HttpGet get=new HttpGet();
@@ -156,14 +155,14 @@ public class ServerUtils {
         //res.close();
         return result;
     }
-    public static Uiobject getUiObjectById(String objId)throws Exception{
-        String method="/api/v2/objects/uiobject/"+objId;
-        HttpGet get=new HttpGet();
-        String res=callMethod(method, get);
-        Uiobject result=gson.fromJson(res, Uiobject.class);
-        //res.close();
-        return result;
-    }
+    // public static Uiobject getUiObjectById(String objId)throws Exception{
+    //     String method="/api/v2/objects/uiobject/"+objId;
+    //     HttpGet get=new HttpGet();
+    //     String res=callMethod(method, get);
+    //     Uiobject result=gson.fromJson(res, Uiobject.class);
+    //     //res.close();
+    //     return result;
+    // }
     public static Test getRefTestDetail(String refTestId)throws Exception{
         String method="/api/v2/tests/testdetail/"+refTestId;
         HttpGet get=new HttpGet();

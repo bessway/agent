@@ -85,8 +85,7 @@ public class AgentTask implements Executor {
         }
 
         this.suite.setTaskStatus(taskResult.name());
-        // 同步服务端job的执行情况,同时重置agent状态,放在jenkins做了
-        // this.syncRunningJob();
+        // 重置agent状态,放在jenkins做了,因为可能jenkins在开始执行前直接报错
         // 保存suite执行结果
         this.suite.setEndTime(new Date());
         Utils.cachedAction=null;
