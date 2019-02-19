@@ -32,6 +32,7 @@ public class AgentTask implements Executor {
     public void loadData(String jobName, Integer buildId, String dataVersion, String env, @Optional String logLevel)
             throws Exception {
         ReportUtils.init(jobName + String.valueOf(buildId));
+        logger.debug("prepare execution "+jobName + String.valueOf(buildId));
         ServerUtils.init();
         // 根据suiteid获取所有的case
         this.suite = ServerUtils.getTask(jobName, buildId);
@@ -50,6 +51,7 @@ public class AgentTask implements Executor {
     }
 
     public String execute() throws Exception {
+        logger.debug("start execution");
         Utils.ExecStatus taskResult = Utils.ExecStatus.SUCCESS;
         for (Test casz : this.tests) {
             //一个addSubTest必须对应到一个completeTestReport
@@ -65,6 +67,7 @@ public class AgentTask implements Executor {
             try {
                 result = this.getSuccessor(casz, this.getTestParasAll(casz.getTestId())).execute();
             } catch (Exception e) {
+                logger.error(e);
                 result = Utils.ExecStatus.FAILED.name();
             }finally{
                 SeleniumUtils.closeBrowsersKey(null);
@@ -74,8 +77,8 @@ public class AgentTask implements Executor {
                 taskResult = Utils.ExecStatus.FAILED;
             }
             this.suite.getTests().put(casz.getTestId(), result);
-            ServerUtils.updateTestStatus(this.suite.getJenkinsJobName(), this.suite.getJenkinsBuildId(), 
-                                        casz.getTestId(),result);
+            //ServerUtils.updateTestStatus(this.suite.getJenkinsJobName(), this.suite.getJenkinsBuildId(), 
+            //                            casz.getTestId(),result);
             
             ReportUtils.addEndTime(new Date());
             ReportUtils.completeTestReport();
@@ -88,7 +91,7 @@ public class AgentTask implements Executor {
         this.suite.setEndTime(new Date());
         Utils.cachedAction=null;
         Utils.cachedUiObj=null;
-        ServerUtils.updateExecStatus(this.suite);
+        //ServerUtils.updateExecStatus(this.suite);
         ReportUtils.generateReport();
         return taskResult.toString();
     }
@@ -111,7 +114,6 @@ public class AgentTask implements Executor {
         for (Action item : result) {
             Utils.cachedAction.put(item.getActionId(), item);
         }
-        logger.debug(Utils.cachedAction.get("click").toString());
     }
     private Map<String, Para> getTestParasAll(String testId) throws Exception{
         List<Para> paras = ServerUtils.getTestParasAll(testId, Utils.dataVersion);

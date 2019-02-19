@@ -22,12 +22,13 @@ public class RefStepExecutor extends StepExecutor{
     }
     @Override
     public String execute() throws Exception{
-        ReportUtils.addLog(Status.INFO,"Step index: "+String.valueOf(this.step.getIndex()), null);
+        ReportUtils.addSubTest("Step index: "+String.valueOf(this.step.getIndex()+1)+"-"+this.step.getStepDesc());
+        logger.debug("start refered step "+String.valueOf(this.step.getIndex()+1)+"-"+this.step.getStepDesc());
 
         Test reftest=ServerUtils.getRefTestDetail(this.step.getRefTestId());
         Map<String, Para> refTestParas=this.getTestParasAll(reftest.getTestId());
         this.replaceParaOfRefTest(refTestParas);
-
+        ReportUtils.completeTestReport();
         return this.getSuccessor(reftest, refTestParas).execute();
     }
 

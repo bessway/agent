@@ -3,13 +3,14 @@ package executor;
 import pojo.Para;
 import pojo.Step;
 import pojo.Test;
-
+import org.apache.log4j.Logger;
 import utils.Utils;
 import java.util.Map;
 import pojo.Executable;
 
 public class TestExecutor implements Executor{
     private Test test=null;
+    private static Logger logger = Logger.getLogger(TestExecutor.class);
     //paraId@stepId=para
     private Map<String, Para> data=null;
 
@@ -22,6 +23,7 @@ public class TestExecutor implements Executor{
     }
     
     public String execute() throws Exception{
+        logger.debug("test start "+String.valueOf(this.test.getIndex())+'-'+this.test.getTestDesc());
         Utils.ExecStatus testResult = Utils.ExecStatus.SUCCESS;
         for(int i=0;i<this.test.getSteps().size();i++){
             Step step=this.test.getSteps().get(i);

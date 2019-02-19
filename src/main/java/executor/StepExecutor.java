@@ -42,7 +42,7 @@ public class StepExecutor implements Executor{
         return result;
     }
     protected void getParas() throws Exception{
-        if(action.getActionParas()!=null && action.getActionParas().size()>1){
+        if(action.getActionParas()!=null && action.getActionParas().size()>0){
             paraValues=new ArrayList<String>();
             for(int i=0;i<action.getActionParas().size();i++){
                 String paraId=String.valueOf(this.step.getParas().get(i));

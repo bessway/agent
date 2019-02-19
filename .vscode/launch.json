@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - AgentTask",
+            "request": "launch",
+            "mainClass": "executor.AgentTask",
+            "projectName": "agent"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Utils",
             "request": "launch",
             "mainClass": "utils.Utils",
