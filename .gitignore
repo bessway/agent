@@ -1,0 +1,5 @@
+target/
+log/
+.settings/
+.sts4-cache/
+report-output/*
