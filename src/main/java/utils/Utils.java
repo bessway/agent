@@ -26,6 +26,7 @@ public class Utils {
     public static String paraSeperator = "@";
     public static String dataVersion = null;
     public static String logLevel = null;
+    public static String browserType = null;
 
     public enum ExecStatus {
         READYTOSTART, RUNNING, FAILED, SUCCESS, EXCEPTION, FAILEDTOSTART, FORCESTOP,
@@ -312,27 +313,27 @@ public class Utils {
         // printImg(ImageIO.read(dir));
     }
 
-    public static void main(String[] args) throws Exception {
-        File dir = new File("/Users/zhengliliang/Desktop/p/");
-        File[] files = dir.listFiles();
-        for (File file : files) {
-            if (!file.getName().endsWith("jpeg") && !file.getName().endsWith("png")) {
-                continue;
-            }
-            // if(file.getName().contains("Captcha")){
-            // trainData(file);
-            // }
+    // public static void main(String[] args) throws Exception {
+    //     File dir = new File("/Users/zhengliliang/Desktop/p/");
+    //     File[] files = dir.listFiles();
+    //     for (File file : files) {
+    //         if (!file.getName().endsWith("jpeg") && !file.getName().endsWith("png")) {
+    //             continue;
+    //         }
+    //         // if(file.getName().contains("Captcha")){
+    //         // trainData(file);
+    //         // }
 
-            String[] result = null;
-            if (file.getName().contains("Code")) {
-                // System.out.print(file.getName()+" ");
-                // result=ocr(file, true);
-                // System.out.println(result[0]+result[1]+result[2]);
-            } else if (file.getName().contains("Captcha")) {
-                System.out.print(file.getName() + " ");
-                result = ocr(file, false);
-                System.out.println(result[0] + result[1] + result[2]);
-            }
-        }
-    }
+    //         String[] result = null;
+    //         if (file.getName().contains("Code")) {
+    //             // System.out.print(file.getName()+" ");
+    //             // result=ocr(file, true);
+    //             // System.out.println(result[0]+result[1]+result[2]);
+    //         } else if (file.getName().contains("Captcha")) {
+    //             System.out.print(file.getName() + " ");
+    //             result = ocr(file, false);
+    //             System.out.println(result[0] + result[1] + result[2]);
+    //         }
+    //     }
+    // }
 }

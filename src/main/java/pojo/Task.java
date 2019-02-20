@@ -2,10 +2,9 @@ package pojo;
 
 import java.util.Date;
 import java.util.Map;
-
 import java.util.HashMap;
 
-public class Task implements Executable{
+public class Task{
     private String jenkinsJobName=null;
     private Integer jenkinsBuildId=null;
     private String taskStatus=null;
@@ -19,6 +18,8 @@ public class Task implements Executable{
     private String logLevel=null;
     private String dataVersion=null;
     private String env=null;
+    private String reportUrl=null;
+    private String browserType=null;
 
     public void setLogLevel(String logLevel){
         this.logLevel=logLevel;
@@ -96,7 +97,6 @@ public class Task implements Executable{
         this.dataVersion=dataVersion;
     }
     public String getDataVersion(){
-
         return this.dataVersion;
     }
     public void setEnv(String env){
@@ -104,5 +104,17 @@ public class Task implements Executable{
     }
     public String getEnv(){
         return this.env;
+    }
+    public String getReportUrl(){
+        return this.reportUrl;
+    }
+    public void setReportUrl(String reportUrl){
+        this.reportUrl=reportUrl;
+    }
+    public String getBrowserType(){
+        return this.browserType;
+    }
+    public void setBrowserType(String browserType){
+        this.browserType=browserType;
     }
 }

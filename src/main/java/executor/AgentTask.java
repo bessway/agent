@@ -28,8 +28,8 @@ public class AgentTask implements Executor {
     private List<Test> tests = null;
 
     @BeforeClass
-    @Parameters({ "jobName", "buildId", "dataVersion", "logLevel", "env" })
-    public void loadData(String jobName, Integer buildId, String dataVersion, String env, @Optional String logLevel)
+    @Parameters({ "jobName", "buildId", "dataVersion", "env", "browserType", "logLevel" })
+    public void loadData(String jobName, Integer buildId, String dataVersion, String env, @Optional String browserType, @Optional String logLevel)
             throws Exception {
         ReportUtils.init(jobName + String.valueOf(buildId));
         logger.debug("prepare execution "+jobName + String.valueOf(buildId));
@@ -41,6 +41,7 @@ public class AgentTask implements Executor {
         this.loadActions();
         Utils.dataVersion = dataVersion;
         Utils.logLevel = logLevel;
+        Utils.browserType = browserType;
         //从数据库获取环境变量
         //this.getEnvConfig();
     }
@@ -77,8 +78,8 @@ public class AgentTask implements Executor {
                 taskResult = Utils.ExecStatus.FAILED;
             }
             this.suite.getTests().put(casz.getTestId(), result);
-            //ServerUtils.updateTestStatus(this.suite.getJenkinsJobName(), this.suite.getJenkinsBuildId(), 
-            //                            casz.getTestId(),result);
+            ServerUtils.updateTestStatus(this.suite.getJenkinsJobName(), this.suite.getJenkinsBuildId(), 
+                                        casz.getTestId(),result);
             
             ReportUtils.addEndTime(new Date());
             ReportUtils.completeTestReport();
@@ -90,7 +91,7 @@ public class AgentTask implements Executor {
         this.suite.setEndTime(new Date());
         Utils.cachedAction=null;
         Utils.cachedUiObj=null;
-        //ServerUtils.updateExecStatus(this.suite);
+        ServerUtils.updateExecStatus(this.suite);
         ReportUtils.generateReport();
         return taskResult.toString();
     }
@@ -127,9 +128,9 @@ public class AgentTask implements Executor {
         }
         return result;
     }
-    public static void main(String[] args) throws Exception{
-        AgentTask test=new AgentTask();
-        test.loadData("zll",1,"default","","");
-        test.start();
-    }
+    // public static void main(String[] args) throws Exception{
+    //     AgentTask test=new AgentTask();
+    //     test.loadData("auto_zll",1,"default","uat","chrome","info");
+    //     test.start();
+    // }
 }

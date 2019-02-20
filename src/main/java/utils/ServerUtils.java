@@ -20,7 +20,6 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
-import pojo.Agent;
 import pojo.Task;
 import pojo.Para;
 import pojo.Test;
@@ -71,14 +70,14 @@ public class ServerUtils {
     }
 
     public static Task getTask(String jobName,Integer buildId) throws Exception{
-        // String method="/api/v2/jenkins/job/"+jobName+"/build/"+String.valueOf(buildId);
-        // HttpGet get=new HttpGet();
-        // CloseableHttpResponse res=callMethod(method, get);
-        // Task result=gson.fromJson(EntityUtils.toString(res.getEntity()), Task.class);
-        // res.close();
-        Task result = new Task();
-        result.addTest("5c637a9d5eeb2960ac1fcc6f", Utils.ExecStatus.READYTOSTART.name());
+        String method="/api/v2/jenkins/job/"+jobName+"/build/"+String.valueOf(buildId);
+        HttpGet get=new HttpGet();
+        String res=callMethod(method, get);
+        Task result=gson.fromJson(res, Task.class);
         return result;
+        // Task result = new Task();
+        // result.addTest("5c637a9d5eeb2960ac1fcc6f", Utils.ExecStatus.READYTOSTART.name());
+        // return result;
     }
     public static List<Test> getTests(List<String> testIds)throws Exception{
         String method="/api/v2/tests";

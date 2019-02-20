@@ -121,10 +121,10 @@ public class SeleniumUtils {
         currDriver=url;
         return currDriver;
     }
-    public static String openPageKey(String url, String browserType) throws Exception {
+    public static String openPageKey(String url) throws Exception {
         WebDriver driver = null;
         if (!drivers.containsKey(url)) {
-            driver = launchBrowser(browserType);
+            driver = launchBrowser(Utils.browserType);
             drivers.put(url, driver);
             WebDriverWait wait=new WebDriverWait(driver, maxWait,500);
             waits.put(url,wait);
@@ -455,7 +455,7 @@ public class SeleniumUtils {
             driver = new InternetExplorerDriver();
             break;
         default:
-            logger.error("unsupported browser");
+            logger.error(type + " browser is not supported");
             throw new Exception(type + " browser is not supported");
         }
         driver.manage().window().maximize();

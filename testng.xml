@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="ui" parallel="classes" thread-count="1">
+<suite name="agent" parallel="classes" thread-count="1">
     <!--parameter name="Environment" value="${testEnvironment}"/-->
-    <test verbose="1" preserve-order="true" name="uiexecutor">
+    <test verbose="1" preserve-order="true" name="executors">
         <classes>
-            <class name="executor.UITask"/>
+            <class name="executor.AgentTask"/>
         </classes>
     </test>
 </suite>

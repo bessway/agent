@@ -52,11 +52,11 @@ public class UIStepExecutor extends StepExecutor{
         logger.debug(reportContent);
         ReportUtils.addLog(Status.INFO,reportContent, null);
         String result= Utils.ExecStatus.SUCCESS.name();
-        //result = this.executeKey(funcName, mParaValue);
-        System.out.println(funcName);
-        for(int i=0;i<mParaValue.size();i++){
-            System.out.println(mParaValue.get(i));
-        }
+        result = this.executeKey(funcName, mParaValue);
+        //System.out.println(funcName);
+        // for(int i=0;i<mParaValue.size();i++){
+        //     System.out.println(mParaValue.get(i));
+        // }
         return result;
     }
     private String executeKey(String funcName, List<String> mParaValue){
@@ -89,7 +89,6 @@ public class UIStepExecutor extends StepExecutor{
         if(action.getHasUIObject().equals(1)){
             //如果uiobject没有读取到，按page load所有uiobject
             if(Utils.cachedUiObj==null || !Utils.cachedUiObj.containsKey(this.step.getUiObjectId())){
-                //Uiobject uiObj = ServerUtils.getUiObjectById(this.step.getUiObjectId());
                 this.cacheUiObjByPage(this.step.getUiObjectId());
             }
             this.uitarget=Utils.cachedUiObj.get(this.step.getUiObjectId());
