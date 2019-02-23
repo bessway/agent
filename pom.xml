@@ -21,6 +21,7 @@
     <!--fromcmd>${name}</fromcmd-->
   </properties>
   <build>
+    <defaultGoal>compile</defaultGoal>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
