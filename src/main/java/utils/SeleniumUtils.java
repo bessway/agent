@@ -410,6 +410,7 @@ public class SeleniumUtils {
         
         return name;
     }
+    //删除一周前的截图
     private static void deleteScreenshot(){
         File screenshotDir = new File(ReportUtils.reportRoot);
         if(!screenshotDir.exists()&& !screenshotDir.isDirectory()){

@@ -73,6 +73,8 @@ public class AgentTask implements Executor {
             }finally{
                 SeleniumUtils.closeBrowsersKey(null);
             }
+            ReportUtils.addEndTime(new Date());
+            ReportUtils.completeTestReport();
             // 有一个case失败则suite是失败状态
             if (result.equals(Utils.ExecStatus.FAILED.name())) {
                 taskResult = Utils.ExecStatus.FAILED;
@@ -80,9 +82,6 @@ public class AgentTask implements Executor {
             this.suite.getTests().put(casz.getTestId(), result);
             ServerUtils.updateTestStatus(this.suite.getJenkinsJobName(), this.suite.getJenkinsBuildId(), 
                                         casz.getTestId(),result);
-            
-            ReportUtils.addEndTime(new Date());
-            ReportUtils.completeTestReport();
         }
 
         this.suite.setTaskStatus(taskResult.name());
