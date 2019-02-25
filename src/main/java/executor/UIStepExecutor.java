@@ -79,7 +79,12 @@ public class UIStepExecutor extends StepExecutor{
             return Utils.ExecStatus.FAILED.name();
         }catch(Exception e){
             logger.debug("excute method "+funcName+" failed",e);
-            ReportUtils.addLog(Status.ERROR, "exception " +e.getMessage(), null);
+            String screenshotPath=null;
+            try{
+                screenshotPath=SeleniumUtils.takeScreenshot();
+            }catch(Exception e1){}
+            ReportUtils.addLog(Status.ERROR, "exception " +e.getMessage(), screenshotPath);
+            ReportUtils.addLog(Status.ERROR, e);
             return Utils.ExecStatus.FAILED.name();
         }
     

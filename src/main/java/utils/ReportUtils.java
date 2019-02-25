@@ -45,7 +45,7 @@ public class ReportUtils{
         if(currTest==null){
             currTest=extent.createTest(desc);
         }else{
-            currTest.createNode(desc);
+            currTest=currTest.createNode(desc);
         }
         tests.addLast(currTest);
     }
@@ -68,6 +68,9 @@ public class ReportUtils{
         }else{
             currTest.log(status,detail);
         }
+    }
+    public static void addLog(Status status,Exception e){
+            currTest.log(status,e);
     }
     public static void addStartTime(Date start){
         currTest.getModel().setStartTime(start);

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import com.aventstack.extentreports.Status;
 
 import pojo.Executable;
 import pojo.Para;
@@ -28,8 +27,15 @@ public class RefStepExecutor extends StepExecutor{
         Test reftest=ServerUtils.getRefTestDetail(this.step.getRefTestId());
         Map<String, Para> refTestParas=this.getTestParasAll(reftest.getTestId());
         this.replaceParaOfRefTest(refTestParas);
-        ReportUtils.completeTestReport();
-        return this.getSuccessor(reftest, refTestParas).execute();
+        String result="";
+        try{
+            result=this.getSuccessor(reftest, refTestParas).execute();
+            ReportUtils.completeTestReport();
+            return result;
+        }catch(Exception e){
+            ReportUtils.completeTestReport();
+            throw e;
+        }
     }
 
     @Override

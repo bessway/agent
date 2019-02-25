@@ -70,6 +70,7 @@ public class Utils {
         return grayImage;
     }
 
+    //挨着的去除独立的躁点
     private static BufferedImage removeSingle(BufferedImage img, int width, int height) {
         for (int i = 1; i < width - 1; i++) {
             for (int j = 1; j < height - 1; j++) {
@@ -80,7 +81,7 @@ public class Utils {
         }
         return img;
     }
-
+    //少于4个黑点时，移除
     private static Boolean isSingle(BufferedImage img, int i, int j) {
         int cnt = 0;
         if (img.getRGB(i, j) == -1) {
@@ -98,8 +99,21 @@ public class Utils {
         }
         return false;
     }
-
-    private static Boolean isBlank(BufferedImage img, int x, int height) {
+    //判断左右是否空行，黑点小于10%时为空行
+    private static Boolean isColBlank(BufferedImage img, int x, int height) {
+        int cnt = 0;
+        for (int j = 0; j < height; j++) {
+            if (img.getRGB(x, j) != -1) {
+                cnt = cnt + 1;
+            }
+        }
+        if(cnt * 100 >= height * 20){
+            return false;
+        }
+        return true;
+    }
+    //多余一个黑点则不是空行
+    private static Boolean isColBlankRaw(BufferedImage img, int x, int height){
         int cnt = 0;
         for (int j = 0; j < height; j++) {
             if (img.getRGB(x, j) != -1) {
@@ -111,87 +125,134 @@ public class Utils {
         }
         return true;
     }
-
-    private static BufferedImage[] splitImage(BufferedImage img, int width, int height) {
+    private static BufferedImage[] rawSplitImage(BufferedImage img, int width, int height) {
         BufferedImage[] imgs = new BufferedImage[3];
         int start = 0;
         int end = width - 1;
         int middleStart = 0;
         Boolean result = false;
         for (int i = start; i < width; i++) {
-            if (!result && !isBlank(img, i, height)) {
+            if (!result && !isColBlankRaw(img, i, height)) {
                 start = i;
                 result = true;
             }
-            if (result && isBlank(img, i, height)) {
+            if (result && isColBlankRaw(img, i, height)) {
                 end = i - 1;
                 middleStart = i;
                 break;
             }
         }
         imgs[0] = img.getSubimage(start, 0, end - start + 1, height);
-        imgs[0] = removeHeightBlank(imgs[0]);
         result = false;
         for (int i = width - 1; i > 0; i--) {
-            if (!result && !isBlank(img, i, height)) {
+            if (!result && !isColBlankRaw(img, i, height)) {
                 start = i;
                 result = true;
             }
-            if (result && isBlank(img, i, height)) {
+            if (result && isColBlankRaw(img, i, height)) {
                 end = i + 1;
                 break;
             }
         }
         imgs[2] = img.getSubimage(end, 0, start - end + 1, height);
-        imgs[2] = removeHeightBlank(imgs[2]);
         result = false;
         for (int i = middleStart; i <= end; i++) {
-            if (!result && !isBlank(img, i, height)) {
+            if (!result && !isColBlankRaw(img, i, height)) {
                 start = i;
                 result = true;
             }
-            if (result && isBlank(img, i, height)) {
+            if (result && isColBlankRaw(img, i, height)) {
                 end = i - 1;
                 break;
             }
         }
         imgs[1] = img.getSubimage(start, 0, end - start + 1, height);
-        imgs[1] = removeHeightBlank(imgs[1]);
         return imgs;
     }
-
-    private static BufferedImage removeHeightBlank(BufferedImage img) {
+    //判断上下是否空行，黑点小于10%时为空行
+    private static Boolean isRowBlank(BufferedImage img, int width, int y){
+        int cnt = 0;
+        for (int i = 0; i < width; i++) {
+            if (img.getRGB(i, y) != -1) {
+                cnt = cnt + 1;
+            }
+        }
+        if(cnt * 100 >= width * 20){
+            return false;
+        }
+        return true;
+    }
+    //多余一个黑点则不是空行
+    private static Boolean isRowBlankRaw(BufferedImage img, int width, int y){
+        int cnt = 0;
+        for (int i = 0; i < width; i++) {
+            if (img.getRGB(i, y) != -1) {
+                cnt = cnt + 1;
+            }
+        }
+        if (cnt > 1) {
+            return false;
+        }
+        return true;
+    }
+    private static BufferedImage rawRemoveRowBlank(BufferedImage img){
         int width = img.getWidth();
         int height = img.getHeight();
         int start = 0;
         int end = height;
         for (int j = 0; j < height; j++) {
-            int cnt = 0;
-            for (int i = 0; i < width; i++) {
-                if (img.getRGB(i, j) != -1) {
-                    cnt = cnt + 1;
-                }
-            }
-            if (cnt > 1) {
+            if (!isRowBlankRaw(img, width, j)) {
                 start = j;
                 break;
             }
         }
-        for (int j = height - 1; j >= 0; j--) {
-            int cnt = 0;
-            for (int i = 0; i < width; i++) {
-                if (img.getRGB(i, j) != -1) {
-                    cnt = cnt + 1;
-                }
-            }
-            if (cnt > 1) {
+        for(int j=height-1;j>=0;j--){
+            if (!isRowBlankRaw(img, width, j)) {
                 end = j;
                 break;
             }
         }
         return img.getSubimage(0, start, width, end - start + 1);
     }
-
+    //移除上下的空行
+    private static BufferedImage removeRowBlank(BufferedImage img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int start = 0;
+        int end = height;
+        for (int j = 0; j < height; j++) {
+            if (!isRowBlank(img, width, j)) {
+                start = j;
+                break;
+            }
+        }
+        for(int j=height-1;j>=0;j--){
+            if (!isRowBlank(img, width, j)) {
+                end = j;
+                break;
+            }
+        }
+        return img.getSubimage(0, start, width, end - start + 1);
+    }
+    private static BufferedImage removeColBlank(BufferedImage img) {
+        int width = img.getWidth();
+        int height = img.getHeight();
+        int start = 0;
+        int end = width;
+        for (int i = 0; i < width; i++) {
+            if (!isColBlank(img, i, height)) {
+                start = i;
+                break;
+            }
+        }
+        for(int i=width-1;i>=0;i--){
+            if (!isColBlank(img, i, height)) {
+                end = i;
+                break;
+            }
+        }
+        return img.getSubimage(start, 0, end - start + 1, height);
+    }
     private static Map<BufferedImage, String> loadTrainData(Boolean isFront) throws Exception {
         Map<BufferedImage, String> codes = new HashMap<BufferedImage, String>();
         File dir = new File(getResourcePath() + "code/");
@@ -230,11 +291,6 @@ public class Utils {
         int min = 0;
 
         Label1: for (BufferedImage item : trainedData.keySet()) {
-            // printImg(img);
-            // System.out.println("========================================");
-            // System.out.println(trainedData.get(item));
-            // printImg(item);
-            // System.out.println("========================================");
             int count = 0;
             int codeWidth = item.getWidth();
             int codeHeight = item.getHeight();
@@ -272,13 +328,16 @@ public class Utils {
         int height = downloadImg.getHeight();
         downloadImg = grayImage(downloadImg, width, height);
         downloadImg = removeSingle(downloadImg, width, height);
-        BufferedImage[] singleCode = splitImage(downloadImg, width, height);
+        BufferedImage[] singleCode = rawSplitImage(downloadImg, width, height);
 
         Map<BufferedImage, String> codes = loadTrainData(isFront);
         String[] result = new String[3];
         for (int i = 0; i < 3; i++) {
-            // File newFile = new File("/Users/zhengliliang/Desktop/p/test"+i+".jpg");
-            // ImageIO.write(singleCode[i], "jpg", newFile);
+            singleCode[i]=rawRemoveRowBlank(singleCode[i]);
+            if(!isFront){
+                singleCode[i]=removeRowBlank(singleCode[i]);
+                singleCode[i]=removeColBlank(singleCode[i]);
+            }
             result[i] = getSingleCharOcr(singleCode[i], codes, isFront);
         }
         if (result[1].equals("minus")) {
@@ -289,7 +348,7 @@ public class Utils {
         return result;
     }
 
-    private static void trainData(File file) throws Exception {
+    private static void trainData(File file, Boolean isFront) throws Exception {
         String name = file.getAbsolutePath();
         BufferedImage downloadImg = ImageIO.read(file);
 
@@ -297,20 +356,19 @@ public class Utils {
         int height = downloadImg.getHeight();
         downloadImg = grayImage(downloadImg, width, height);
         downloadImg = removeSingle(downloadImg, width, height);
-        BufferedImage[] singleCode = splitImage(downloadImg, width, height);
+        BufferedImage[] singleCode = rawSplitImage(downloadImg, width, height);
 
         String desPath = name.split("\\.")[0];
         for (int i = 0; i < 3; i++) {
-            // printImg(singleCode[i]);
-            // System.out.println("========================================");
+            singleCode[i]=rawRemoveRowBlank(singleCode[i]);
+            if(!isFront){
+                singleCode[i]=removeRowBlank(singleCode[i]);
+                singleCode[i]=removeColBlank(singleCode[i]);
+            }
+            
             File newFile = new File(desPath + "_result" + i + ".jpg");
             ImageIO.write(singleCode[i], "jpg", newFile);
         }
-        // File dir = new
-        // File("/Users/zhengliliang/Desktop/p/getVerifyCode4_result1.jpg");
-        // File dir = new
-        // File("/Users/zhengliliang/Documents/ui/agent/src/main/resources/code/fplus.jpg");
-        // printImg(ImageIO.read(dir));
     }
 
     // public static void main(String[] args) throws Exception {
@@ -320,19 +378,22 @@ public class Utils {
     //         if (!file.getName().endsWith("jpeg") && !file.getName().endsWith("png")) {
     //             continue;
     //         }
-    //         // if(file.getName().contains("Captcha")){
-    //         // trainData(file);
-    //         // }
+    //         if(file.getName().startsWith("a")){
+    //             trainData(file, true);
+    //         }
+    //         if(file.getName().startsWith("b")){
+    //             trainData(file, false);
+    //         }
 
     //         String[] result = null;
-    //         if (file.getName().contains("Code")) {
-    //             // System.out.print(file.getName()+" ");
-    //             // result=ocr(file, true);
-    //             // System.out.println(result[0]+result[1]+result[2]);
-    //         } else if (file.getName().contains("Captcha")) {
-    //             System.out.print(file.getName() + " ");
-    //             result = ocr(file, false);
-    //             System.out.println(result[0] + result[1] + result[2]);
+    //         if (file.getName().startsWith("a")) {
+    //             System.out.print(file.getName()+" ");
+    //             result=ocr(file, true);
+    //             System.out.println(result[0]+result[1]+result[2]);
+    //         } else if (file.getName().startsWith("b")) {
+    //             // System.out.print(file.getName() + " ");
+    //             // result = ocr(file, false);
+    //             // System.out.println(result[0] + result[1] + result[2]);
     //         }
     //     }
     // }
