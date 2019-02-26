@@ -1,0 +1,266 @@
+[{
+    "actionName": "判断文本一样",
+    "hasUIObject": 1,
+    "hasResponse": 1,
+    "regFunc": "assertEqual",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "属性",
+        "paraId": 0
+    }, {
+        "paraDesc": "预期值",
+        "paraId": 1
+    }]
+}, {
+    "actionName": "判断文本不同",
+    "hasUIObject": 1,
+    "hasResponse": 1,
+    "regFunc": "assertNotEqual",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "属性",
+        "paraId": 0
+    }, {
+        "paraDesc": "预期值",
+        "paraId": 1
+    }]
+}, {
+    "actionName": "点击",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "click",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "点击隐藏元素",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "clickNotVisible",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "输入",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "input",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "输入值",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "跳转页面",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "navigateTo",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "链接",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "打开新页面",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "openPage",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "链接",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "下拉框选择",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "select",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "选项值",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "切换frame",
+    "hasUIObject": 1,
+    "hasResponse": 1,
+    "regFunc": "swithToFrame",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "等待元素显示",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "waitVisible",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "等待元素消失",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "waitInvisible",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "关闭当前并切换其他页面",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "closeAndSwitchBrowser",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "要关闭的页面",
+        "paraId": 0
+    },{
+        "paraDesc": "要切换的页面",
+        "paraId": 1
+    }]
+}, {
+    "actionName": "切换其他页面",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "swithToBrowser",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "要切换的页面",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "关闭页面",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "closeBrowsers",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "要关闭的页面",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "正则匹配文本",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "assertMatch",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "属性",
+        "paraId": 0
+    },{
+        "paraDesc": "正则表达式",
+        "paraId": 1
+    }]
+}, {
+    "actionName": "强制等待",
+    "hasUIObject": 0,
+    "hasResponse": 0,
+    "regFunc": "hardWait",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "等待时间(秒)",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "提取文本",
+    "hasUIObject": 1,
+    "hasResponse": 1,
+    "regFunc": "getAttribute",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "属性",
+        "paraId": 0
+    },{
+        "paraDesc": "正则表达式",
+        "paraId": 1
+    }]
+}, {
+    "actionName": "获取随机文本",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "getRandom",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "前缀",
+        "paraId": 0
+    },{
+        "paraDesc": "长度",
+        "paraId": 1
+    },{
+        "paraDesc": "是否包含字母",
+        "paraId": 2
+    }]
+}, {
+    "actionName": "判断元素数量",
+    "hasUIObject": 1,
+    "hasResponse": 1,
+    "regFunc": "assertCount",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "预期数量",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "等待元素可用",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "waitEnable",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "等待元素禁用",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "waitDisable",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "获取页面标题",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "getTitle",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "判断页面标题一样",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "assertTitle",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "预期值",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "匹配页面标题",
+    "hasUIObject": 0,
+    "hasResponse": 1,
+    "regFunc": "assertTitleMatch",
+    "actionType": 1,
+    "actionParas": [{
+        "paraDesc": "正则表达式",
+        "paraId": 0
+    }]
+}, {
+    "actionName": "关闭警告弹窗",
+    "hasUIObject": 0,
+    "hasResponse": 0,
+    "regFunc": "closeAlert",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "关闭并切换标签页面",
+    "hasUIObject": 0,
+    "hasResponse": 0,
+    "regFunc": "closeAndSwithToTab",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "识别官网注册简单验证码",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "gwFrontCode",
+    "actionType": 1,
+    "actionParas": []
+}, {
+    "actionName": "识别官网登陆简单验证码",
+    "hasUIObject": 1,
+    "hasResponse": 0,
+    "regFunc": "gwAdminCode",
+    "actionType": 1,
+    "actionParas": []
+}]

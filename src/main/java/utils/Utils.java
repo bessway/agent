@@ -253,15 +253,15 @@ public class Utils {
         }
         return img.getSubimage(start, 0, end - start + 1, height);
     }
-    private static Map<BufferedImage, String> loadTrainData(Boolean isFront) throws Exception {
+    private static Map<BufferedImage, String> loadTrainData(String isFront) throws Exception {
         Map<BufferedImage, String> codes = new HashMap<BufferedImage, String>();
         File dir = new File(getResourcePath() + "code/");
         File[] files = dir.listFiles();
         for (File file : files) {
             String name = file.getName();
-            if (isFront && name.startsWith("f")) {
+            if ("gwFront".equals(isFront) && name.startsWith("f")) {
                 codes.put(ImageIO.read(file), name.substring(1, name.length() - 4));
-            } else if (!isFront && name.startsWith("b")) {
+            } else if (!"gwFront".equals(isFront) && name.startsWith("b")) {
                 String codeName = name.substring(1, name.length() - 4);
                 if (codeName.length() > 1 && codeName.length() < 3) {
                     codes.put(ImageIO.read(file), codeName.substring(0, 1));
@@ -284,7 +284,7 @@ public class Utils {
         }
     }
 
-    private static String getSingleCharOcr(BufferedImage img, Map<BufferedImage, String> trainedData, Boolean isFront) {
+    private static String getSingleCharOcr(BufferedImage img, Map<BufferedImage, String> trainedData, String isFront) {
         String result = "";
         int width = img.getWidth();
         int height = img.getHeight();
@@ -299,7 +299,7 @@ public class Utils {
             }
             int boundWidth = width < codeWidth ? width : codeWidth;
             int boundHeight = height < codeHeight ? height : codeHeight;
-            if (isFront) {
+            if ("gwFront".equals(isFront)) {
                 min = boundWidth * boundHeight * 90;
             } else {
                 min = boundWidth * boundHeight * 85;
@@ -321,7 +321,7 @@ public class Utils {
         return result;
     }
 
-    public static String[] ocr(File file, Boolean isFront) throws Exception {
+    public static String[] ocr(File file, String page) throws Exception {
         BufferedImage downloadImg = ImageIO.read(file);
 
         int width = downloadImg.getWidth();
@@ -330,15 +330,15 @@ public class Utils {
         downloadImg = removeSingle(downloadImg, width, height);
         BufferedImage[] singleCode = rawSplitImage(downloadImg, width, height);
 
-        Map<BufferedImage, String> codes = loadTrainData(isFront);
+        Map<BufferedImage, String> codes = loadTrainData(page);
         String[] result = new String[3];
         for (int i = 0; i < 3; i++) {
             singleCode[i]=rawRemoveRowBlank(singleCode[i]);
-            if(!isFront){
+            if(!"gwFront".equals(page)){
                 singleCode[i]=removeRowBlank(singleCode[i]);
                 singleCode[i]=removeColBlank(singleCode[i]);
             }
-            result[i] = getSingleCharOcr(singleCode[i], codes, isFront);
+            result[i] = getSingleCharOcr(singleCode[i], codes, page);
         }
         if (result[1].equals("minus")) {
             result[1] = "-";

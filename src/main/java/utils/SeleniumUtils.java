@@ -475,19 +475,31 @@ public class SeleniumUtils {
     //     return result;
     // }
     public static String gwFrontCodeKey(String target) throws Exception{
-        File img=getEleScreenshot(target);
-        String[] result= Utils.ocr(img, true);
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("js");
-        Object str=engine.eval(result[0] + result[1] + result[2]);
-        return (String)str;
+        return identifySimpleCode(target, "gwFront");
     }
     public static String gwAdminCodeKey(String target) throws Exception{
-        File img=getEleScreenshot(target);
-        String[] result= Utils.ocr(img, false);
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("js");
-        Object str=engine.eval(result[0] + result[1] + result[2]);
-        return (String)str;
+        return identifySimpleCode(target, "gwAdmin");
+    }
+    private static String identifySimpleCode(String target, String page) throws Exception{
+        String result = "";
+        //最多尝试3次
+        for(int i=0;i<3;i++){
+            File img=getEleScreenshot(target);
+            String[] codes= Utils.ocr(img, page);
+            if("".equals(codes[0]) || "".equals(codes[2])){
+                clickKey(target);
+                Thread.sleep(500);
+                continue;
+            }
+            ScriptEngineManager manager = new ScriptEngineManager();
+            ScriptEngine engine = manager.getEngineByName("js");
+            Object str=engine.eval(codes[0] + codes[1] + codes[2]);
+            result = (String)str;
+        }
+        if("".equals(result)){
+            throw new Exception("无法识别验证码");
+        }else{
+            return result;
+        }
     }
 }
