@@ -38,7 +38,8 @@ public class ServerUtils {
             aProperty = Utils.readPropery(agentConfigFile);
         }catch(Exception e){
             logger.debug("cannot find config file: "+agentConfigFile);
-            throw new Exception("cannot find config file: "+agentConfigFile);
+            logger.debug(e);
+            throw e;
         }
         client=HttpClients.createDefault();
     }
