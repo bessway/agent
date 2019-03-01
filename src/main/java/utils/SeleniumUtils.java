@@ -22,11 +22,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import redis.clients.jedis.Jedis;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -34,10 +36,13 @@ import javax.script.ScriptEngineManager;
 
 public class SeleniumUtils {
     private static Logger logger = Logger.getLogger(SeleniumUtils.class);
+    private static String agentConfigFile = "agent.properties";
     private static Map<String, WebDriver> drivers = new HashMap<String, WebDriver>();
     private static Map<String, WebDriverWait> waits = new HashMap<String, WebDriverWait>();
     private static Integer maxWait = 30;
     private static String currDriver="";
+    private static Properties aProperty=null;
+    private static Jedis jedis = null;
 
     public static String assertEqualKey(String target, String attribute, String exValue) throws Exception {
         if("text".equals(attribute)){
@@ -366,6 +371,44 @@ public class SeleniumUtils {
             }
         }
         return Utils.ExecStatus.SUCCESS.name();
+    }
+    public static String getRegisterSmsCode(String target, String key) throws Exception{
+        clickKey(target);
+        return getSmsCode(key+"Register", "uat");
+
+    }
+    private static String getSmsCode(String key, String env) throws Exception{
+        if(aProperty==null){
+            try{
+                aProperty = Utils.readPropery(agentConfigFile);
+            }catch(Exception e){
+                logger.debug("cannot find config file: "+agentConfigFile);
+                logger.debug(e);
+                throw e;
+            }
+        }
+        String result=null;
+        try{
+            if(jedis==null){
+                jedis = new Jedis(aProperty.getProperty(env+".redis.host"),Integer.parseInt(aProperty.getProperty(env+".redis.port")));
+                jedis.auth(aProperty.getProperty(env+".redis.secret"));
+            }
+            jedis.select(Integer.parseInt(aProperty.getProperty(env+".redis.db")));
+            int i=0;
+            while(i<=3 && result==null){
+                Thread.sleep(10000);
+                result=jedis.get(key);
+            }
+            jedis.close();
+            if(result==null){
+                throw new Exception(key+","+env);
+            }
+        }catch(Exception e){
+            logger.debug("failed to get sms code");
+            logger.debug(e);
+            throw e;
+        }
+        return result;
     }
 
     private static WebElement findElement(String xpath) throws Exception{
