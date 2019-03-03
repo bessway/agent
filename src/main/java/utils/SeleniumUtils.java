@@ -3,6 +3,7 @@ package utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -370,6 +371,15 @@ public class SeleniumUtils {
                 break;
             }
         }
+        return Utils.ExecStatus.SUCCESS.name();
+    }
+    public static String mouseOverKey(String target) throws Exception{
+        WebElement ele = findElement(target);
+        String mouseHoverjs = "var evObj = document.createEvent('MouseEvents');" +
+                            "evObj.initMouseEvent(\"mouseover\",true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);" +
+                            "arguments[0].dispatchEvent(evObj);";
+        JavascriptExecutor js = (JavascriptExecutor)getCurrDriver();
+        js.executeScript(mouseHoverjs, ele);
         return Utils.ExecStatus.SUCCESS.name();
     }
     public static String getRegisterSmsCode(String target, String key) throws Exception{
