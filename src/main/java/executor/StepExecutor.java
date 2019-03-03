@@ -46,7 +46,11 @@ public class StepExecutor implements Executor{
             paraValues=new ArrayList<String>();
             for(int i=0;i<action.getActionParas().size();i++){
                 String paraId=String.valueOf(this.step.getParas().get(i));
-                paraValues.add(this.paraHelper.unpackPara(this.data.get(paraId).getParaValue()));
+                if("".equals(paraId)||paraId==null){
+                    paraValues.add("");
+                }else{
+                    paraValues.add(this.paraHelper.unpackPara(this.data.get(paraId).getParaValue()));
+                }
             }
         }
     }
