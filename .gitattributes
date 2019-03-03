@@ -1,0 +1,3 @@
+.git/* merge=ours
+.vscode/* merge=ours
+src/main/resources/agent.properties merge=ours

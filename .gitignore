@@ -3,4 +3,4 @@ log/
 .settings/
 .sts4-cache/
 report-output/*
-**/.Ds_Store
+**/.DS_Store
