@@ -535,8 +535,8 @@ public class SeleniumUtils {
     }
     private static String identifySimpleCode(String target, String page) throws Exception{
         String result = "";
-        //最多尝试3次
-        for(int i=0;i<3;i++){
+        //最多尝试10次
+        for(int i=0;i<10;i++){
             File img=getEleScreenshot(target);
             String[] codes= Utils.ocr(img, page);
             if("".equals(codes[0]) || "".equals(codes[2])){
